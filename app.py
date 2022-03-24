@@ -15,7 +15,7 @@ import random
 tabtitle = 'Titanic down!'
 colors = ['#92A5E8','#8E44AD','#FFC300']
 sourceurl = 'https://www.kaggle.com/c/titanic'
-githublink = 'https://github.com/Dangee/titanic-dropdown'
+githublink = 'https://github.com/Dangee/titanic-v2'
 
 
 ###### Import a dataframe #######
