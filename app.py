@@ -49,6 +49,8 @@ pie_chart_data = [go.Pie(labels=df_summary_sum_all.index, values=df_summary_sum_
 pie_fig = go.Figure(pie_chart_data)
 pie_fig.update_traces(textinfo='value')
 
+
+
 ########### Initiate the app
 external_stylesheets = ['./assets/my_cWLwgPP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -91,7 +93,7 @@ app.layout = html.Div(
                              dcc.Dropdown(
                                  id='dropdown-class-id',
                                  options=[{'label': i, 'value': i} for i in passenger_class_list],
-                                 value=passenger_class_list[0],
+                                 value=None,
                                  clearable=True,
                                  multi=True,
                                  placeholder="All Passengers",
@@ -152,43 +154,27 @@ app.layout = html.Div(
     Output('display-pie', 'figure'),
                # Output('display-bar','figure')],
     Input('go-button-id', 'n_clicks'),
-    State('dropdown-variable-id', 'value')
+    [State('dropdown-variable-id', 'value'),
+     State('dropdown-class-id', 'value')]
 )
-def display_value(clicks, display_value): # passenger_class):
+def display_value(clicks, display_value, passenger_class):
     pie_chart_data = [go.Pie(labels=df_summary_all.index, values=df_summary_all[display_value], hole=.3)]
     pie_fig = go.Figure(pie_chart_data)
     pie_fig.update_traces(textinfo='value')
 
-    return pie_fig
+    # if not passenger class selected, set to all classes
+    if not passenger_class:
+        passenger_class = passenger_class_list
 
-    # pie_chart_data = px.pie(df_summary_all, values=display_value, names="index", hole=.3)
-
-    # pie_chart_data = [go.Pie({"labels": df_summary_all.index, "values": df_summary_all[display_value]})]
-
-#     grouped_mean=df.groupby(['Cabin Class', 'Embarked'])[display_value].mean()
-#     results=pd.DataFrame(grouped_mean)
-#
-#     # Create a grouped bar chart
-#     random_data1=[]
-#     for i in range(0,len(embark_list)):
-#         random_data.append(random.choice(range(1,20)))
-#
-#     random_data2=[]
-#     for i in range(0,len(embark_list)):
-#         random_data.append(random.choice(range(1,20)))
-#
-#     random_data3=[]
-#     for i in range(0,len(embark_list)):
-#         random_data.append(random.choice(range(1,20)))
-#
-    # bar_data1 = go.Bar(
-    #     x=passenger_class_list[0],
+    # bar_data = go.Bar(
+    #     x=passenger_class,
     #     y=random_data1,
     #     name='First Class',
     #     marker=dict(color=colors[0])
     # )
+
     # bar_data2 = go.Bar(
-    #     x=passenger_class_list[1],
+    #     x=passenger_class[1],
     #     y=random_data2,
     #     name='Second Class',
     #     marker=dict(color=colors[1])
@@ -207,7 +193,8 @@ def display_value(clicks, display_value): # passenger_class):
     #     # yaxis = dict(title = str(continuous_var)), # y-axis label
     # )
 
-    # return pie_fig  # , go.Figure(placeholder_data) # go.Figure(bar_data=[bar_data1, bar_data2, bar_data3], layout=bar_layout)
+    return pie_fig
+    # return pie_fig, go.Figure(data=[bar_data1, bar_data2, bar_data3], layout=bar_layout)
 
 
 ######### Run the app #########
